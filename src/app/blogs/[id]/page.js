@@ -5,19 +5,19 @@ import axios from "@/lib/axios";
 import useSWR from "swr";
 import SingleBlog from "@/components/Blog/SingleBlog";
 
-const fetcher = async () => {
+const fetcher = async (url, id) => {
     const response = await axios
-        .get('/api/blogs')
+        .get(`/api/blogs/${id}`)
         .then(res => res)
         .catch(error => {
             if (error.response.status !== 422) throw error
         });
 
-    return response.data.blogs;
+    return response.data.blog;
 };
 
-const Home = () => {
-    const { data: blogs, error: blogError } = useSWR("/api/blogs", fetcher);
+export default function BlogDetails({ params }) {
+    const { data: blog, error: blogError } = useSWR([`/api/blogs/${params.id}`, params.id], fetcher);
 
     return (
         <>
@@ -25,19 +25,11 @@ const Home = () => {
                 <LoginLinks />
 
                 <div className="max-w-6xl mx-auto sm:px-6 lg:px-8">
-                    <div className="my-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        {blogs && blogs.map( (blog, index) => (
-                            <SingleBlog
-                                key={index}
-                                blog={blog}
-                            >
-                            </SingleBlog>
-                        ))}
-                    </div>
+                    {blog && (
+                        <SingleBlog blog={blog}></SingleBlog>
+                    )}
                 </div>
             </div>
         </>
     )
 }
-
-export default Home
