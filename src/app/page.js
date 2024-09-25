@@ -1,17 +1,12 @@
 "use client";
 
 import LoginLinks from '@/app/LoginLinks'
-import axios from "@/lib/axios";
 import useSWR from "swr";
 import SingleBlog from "@/components/Blog/SingleBlog";
+import {getBlogs} from "@/lib/blog";
 
 const fetcher = async () => {
-    const response = await axios
-        .get('/api/blogs')
-        .then(res => res)
-        .catch(error => {
-            if (error.response.status !== 422) throw error
-        });
+    const response = await getBlogs()
 
     return response.data.blogs;
 };
@@ -26,7 +21,7 @@ const Home = () => {
 
                 <div className="max-w-6xl mx-auto sm:px-6 lg:px-8">
                     <div className="my-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        {blogs && blogs.map( (blog, index) => (
+                        {blogs && blogs.map((blog, index) => (
                             <SingleBlog
                                 key={index}
                                 blog={blog}

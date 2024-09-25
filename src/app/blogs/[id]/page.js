@@ -1,17 +1,12 @@
 "use client";
 
 import LoginLinks from '@/app/LoginLinks'
-import axios from "@/lib/axios";
 import useSWR from "swr";
 import SingleBlog from "@/components/Blog/SingleBlog";
+import {getBlogById} from "@/lib/blog";
 
 const fetcher = async (url, id) => {
-    const response = await axios
-        .get(`/api/blogs/${id}`)
-        .then(res => res)
-        .catch(error => {
-            if (error.response.status !== 422) throw error
-        });
+    const response = await getBlogById(id)
 
     return response.data.blog;
 };
